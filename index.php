@@ -1,32 +1,27 @@
 <?php 
-$mensagem="preencha o formulário";
-$usu="";
-$sen="";
+require_once "src/conexao.php"; // Inclui a conexão
 
-if(isset($_POST["usu"], $_POST["sen"])) {
-    $conexao = new PDO("mysql:host=localhost;dbname=forms;charset=utf8", "root", "19091992"); 
+$mensagem = "Preencha o formulário";
+$usu = $sen = "";
 
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $usu = htmlspecialchars(trim($_POST['usu']), ENT_QUOTES, 'UTF-8');
     $sen = htmlspecialchars(trim($_POST['sen']), ENT_QUOTES, 'UTF-8');
-    
 
-    if(!$usu || !$sen) {
+    if (!$usu || !$sen) {
         echo "Usuário ou senha inválidos!";
     } else {
-        $stmt = $conexao->prepare("INSERT INTO usuarios (usuario, senha) VALUES (:usu, :sen )");
+        $stmt = $conexao->prepare("INSERT INTO usuarios (usuario, senha) VALUES (:usu, :sen)");
         $stmt->bindParam(":usu", $usu);
         $stmt->bindParam(":sen", $sen);
         $stmt->execute();
 
         $mensagem = "Cadastro realizado com sucesso!";
-
-        $usu = "";
-        $sen = "";
+        $usu = $sen = "";
     }
-    
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
